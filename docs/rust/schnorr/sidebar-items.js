@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["abstract_structures","elliptic_curve","point","schnorr","theory"]};
