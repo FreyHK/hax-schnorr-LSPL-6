@@ -1,0 +1,19 @@
+cargo-features = ["edition2024"]
+
+[package]
+name = "hax-schnorr-lspl-6"
+version = "0.1.0"
+authors = ["Simon Geertsen", "Frey Husted"]
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+hax-lib = "0.1.0"
+num-bigint = { version = "0.4.6", features = ["rand", "quickcheck"] }
+num-traits = "0.2.19"
+rand = "0.9.1"
+
+[dev-dependencies]
+quickcheck = "1"
