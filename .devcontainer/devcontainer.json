@@ -1,0 +1,33 @@
+{
+	"name": "LSPL6-BachelorProject",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"postCreateCommand": "make",
+	"customizations": {
+		"vscode": {
+		  "extensions": [
+			"maximedenes.vscoq",
+			"rust-lang.rust-analyzer",
+			"dustypomerleau.rust-syntax",
+			"serayuzgur.crates"
+		],
+		  "settings": {
+			"files.exclude": {
+				"**/*.aux": true,
+				"**/*.glob": true,
+				"**/*.vo": true,
+				"**/*.vos": true,
+				"**/*.vok": true,
+				"**/*.html": true,
+				"**/.*.report": true,
+				"**/.*.cache": true
+				}
+			}
+		}
+	  },
+	  "mounts": [
+		  "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly",
+		  "type=bind,source=${localEnv:HOME}/.ssh,target=/root/.ssh,readonly"
+	  ]
+}
