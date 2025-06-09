@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Schnorr.Binary_Nums</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Schnorr.Binary_Nums</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1"></a><h1 class="section">Binary Numbers Helper Lemmas</h1>
+
+
+<div class="paragraph"> </div>
+
+    In this file, we prove several helper lemmas for
+    Rocq binary number type 'N', that we will need in our 
+    other proofs. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">ZArith</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Core</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_size_succ</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos.size</span> (<span class="id" title="var">Pos.succ</span> <span class="id" title="var">n</span>) &lt;= <span class="id" title="var">Pos.succ</span> (<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_size_succ_cases</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos.size</span> (<span class="id" title="var">Pos.succ</span> <span class="id" title="var">n</span>) = <span class="id" title="var">Pos.succ</span> (<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span>) \/ <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos.size</span> (<span class="id" title="var">Pos.succ</span> <span class="id" title="var">n</span>) = (<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_size_lt_val</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 &lt; <span class="id" title="var">n</span> -&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_lt_succ_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos.lt</span> (<span class="id" title="var">Pos.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span> -&gt; <span class="id" title="var">Pos.lt</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_size_lt_if_sum_lt_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos.size</span> (<span class="id" title="var">x</span> + <span class="id" title="var">y</span>) &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Pos.size</span> <span class="id" title="var">x</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_size_lt_if_prod_lt_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos.size</span> (<span class="id" title="var">x</span> * <span class="id" title="var">y</span>) &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Pos.size</span> <span class="id" title="var">x</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">N_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_pos_succ</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">N.pos</span> (<span class="id" title="var">Pos.succ</span> <span class="id" title="var">n</span>) = <span class="id" title="var">N.succ</span> (<span class="id" title="var">N.pos</span> <span class="id" title="var">n</span>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_size_succ</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">N.size</span> (<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) &lt;= <span class="id" title="var">N.succ</span> (<span class="id" title="var">N.size</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">N_size_lt_val</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 &lt; <span class="id" title="var">n</span> -&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">N.size</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_succ_mod_small</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>, <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span> -&gt; <br/>
+&nbsp;&nbsp;(<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = <span class="id" title="var">N.succ</span> (<span class="id" title="var">n</span> <span class="id" title="var">mod</span> <span class="id" title="var">m</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_succ_mod_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = <span class="id" title="var">N.succ</span> <span class="id" title="var">n</span> \/ (<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_succ_mod</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = <span class="id" title="var">N.succ</span> (<span class="id" title="var">n</span> <span class="id" title="var">mod</span> <span class="id" title="var">m</span>) \/ <br/>
+&nbsp;&nbsp;(<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">N_sub_inv_mod</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + (<span class="id" title="var">m</span> - <span class="id" title="var">n</span>)) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">N_sub_inv</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + (<span class="id" title="var">m</span> - <span class="id" title="var">n</span>)) = <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_pos_destruct</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">a</span> + <span class="id" title="var">b</span>) = <span class="id" title="var">Npos</span> <span class="id" title="var">a</span> + <span class="id" title="var">Npos</span> <span class="id" title="var">b</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_size_lt_if_size_succ</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.size</span> (<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.size</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_size_lt_if_sum_lt_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">N.size</span> (<span class="id" title="var">x</span> + <span class="id" title="var">y</span>) &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">N.size</span> <span class="id" title="var">x</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_size_lt_if_sum_lt_r</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">N.size</span> (<span class="id" title="var">x</span> + <span class="id" title="var">y</span>) &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">N.size</span> <span class="id" title="var">y</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_xI</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Npos</span> (<span class="id" title="var">xI</span> <span class="id" title="var">n</span>)) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_xO</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Npos</span> (<span class="id" title="var">xO</span> <span class="id" title="var">n</span>)) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_xI_succ</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Npos</span> (<span class="id" title="var">xI</span> <span class="id" title="var">n</span>)) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">Pos.succ</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_succ_xO</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.succ</span> (<span class="id" title="var">Npos</span> (<span class="id" title="var">xO</span> <span class="id" title="var">n</span>)) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.succ</span> (<span class="id" title="var">Npos</span> (<span class="id" title="var">n</span>)) &lt; <span class="id" title="var">m</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">succ_lt_pred</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.succ</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> &lt;-&gt; <span class="id" title="var">n</span> &lt; <span class="id" title="var">N.pred</span> <span class="id" title="var">m</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_size</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">N</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> -&gt; <span class="id" title="var">N.size</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.NArith.BinNat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_size_size</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">N</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> -&gt; <span class="id" title="var">N.size</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">N.size</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_succ_xI</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.succ</span> (<span class="id" title="var">Npos</span> (<span class="id" title="var">xI</span> <span class="id" title="var">n</span>)) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.succ</span> (<span class="id" title="var">Npos</span> (<span class="id" title="var">n</span>)) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_size_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">N</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.size</span> <span class="id" title="var">n</span> = 0 -&gt; <span class="id" title="var">n</span> = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">pos_size_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span>) = 0 -&gt; (<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>) = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">pred_mod</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;&gt; 0 -&gt; <span class="id" title="var">m</span> &lt;&gt; 0 -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">N.pred</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = (<span class="id" title="var">n</span> + (<span class="id" title="var">m</span> - 1)) <span class="id" title="var">mod</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod_inv_sub</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">b</span> &lt;= <span class="id" title="var">a</span> -&gt; <span class="id" title="var">b</span> &lt;= <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">a</span> + (<span class="id" title="var">m</span> - <span class="id" title="var">b</span>)) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = (<span class="id" title="var">a</span> - <span class="id" title="var">b</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod_add_inv</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + (<span class="id" title="var">m</span> - <span class="id" title="var">n</span>)) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">size_xI</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.size</span> (<span class="id" title="var">Npos</span> (<span class="id" title="var">xI</span> <span class="id" title="var">n</span>)) = <span class="id" title="var">N.succ</span> (<span class="id" title="var">N.size</span> (<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>)).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">size_xO</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.size</span> (<span class="id" title="var">Npos</span> (<span class="id" title="var">xO</span> <span class="id" title="var">n</span>)) = <span class="id" title="var">N.succ</span> (<span class="id" title="var">N.size</span> (<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>)).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">n_add_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">a</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">b</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">a</span> + <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_size_lt_double_val</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">N.size</span> (<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">Npos</span> (<span class="id" title="var">xO</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N2Pos_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">Npos</span> <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_lt_xO</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">xO</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">xO</span> <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_lt_xO_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">xO</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_lt_xO_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">xO</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_lt_xI</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">xI</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">xI</span> <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span><br/>
+&nbsp;&nbsp;-&gt; (<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos2N_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">Npos</span> <span class="id" title="var">m</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos_size_lt_double_val</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">xO</span> <span class="id" title="var">n</span>)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">pos_2_eq_1_plus_1</span> : (2%<span class="id" title="var">positive</span> = 1 + 1)%<span class="id" title="var">positive</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">pos_lt_split</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + <span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> + <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_pos_size_fold</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span>) = <span class="id" title="var">N.size</span> (<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">pos_size_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">Pos.size</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_xO_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">xO</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_xI_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">Npos</span> (<span class="id" title="var">xI</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Npos</span> <span class="id" title="var">n</span>) &lt; <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N2Nat_lt_Pos2Nat</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">N.to_nat</span> <span class="id" title="var">a</span> &lt; <span class="id" title="var">Pos.to_nat</span> <span class="id" title="var">b</span>)%<span class="id" title="var">nat</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">a</span> &lt; <span class="id" title="var">Npos</span> <span class="id" title="var">b</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_antisym</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span> -&gt; <span class="id" title="var">m</span> &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">False</span>.<br/>
+ 
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nat_to_N</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">m</span> : <span class="id" title="var">N</span>), <span class="id" title="var">n</span> = <span class="id" title="var">N.to_nat</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N2Nat_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">N.to_nat</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">N.to_nat</span> <span class="id" title="var">m</span>)%<span class="id" title="var">nat</span> &lt;-&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">m</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_lt_sum</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">x</span> + <span class="id" title="var">y</span> &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">x</span> &lt; <span class="id" title="var">n</span> /\ <span class="id" title="var">y</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Nat_succ_mod</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Nat.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = <span class="id" title="var">Nat.succ</span> (<span class="id" title="var">n</span> <span class="id" title="var">mod</span> <span class="id" title="var">m</span>) \/ <br/>
+&nbsp;&nbsp;(<span class="id" title="var">Nat.succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">mod</span> <span class="id" title="var">m</span> = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

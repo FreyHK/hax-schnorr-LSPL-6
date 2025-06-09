@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Schnorr.Schnorr_Schnorr</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Schnorr.Schnorr_Schnorr</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+  This file contains the Hax extraction of the schnorr protocol implementation
+  and prove the completeness property and a lemma used in the proof of the soundness
+  property. 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">ZArith</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">List.ListNotations</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">Z_scope</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">bool_scope</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Ascii</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">String</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Floats.Floats</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">RecordUpdate</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSet</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSetNotations</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Core</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Core</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Schnorr_Abstract_structures</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Schnorr_Elliptic_curve</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Schnorr_Point</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Binary_Nums</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">gen_key</span> <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Field</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Scalar</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;(<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> <span class="id" title="var">v_F</span> <span class="id" title="var">v_S</span>) <br/>
+&nbsp;&nbsp;(<span class="id" title="var">a</span> : <span class="id" title="var">v_S</span>) : <span class="id" title="var">t_Point</span> <span class="id" title="var">v_F</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_G</span> := <span class="id" title="var">impl__generator</span> <span class="id" title="var">curve</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">impl__mul</span> <span class="id" title="var">curve</span> <span class="id" title="var">v_G</span> <span class="id" title="var">a</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">commitment</span> <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Field</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Scalar</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;(<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> <span class="id" title="var">v_F</span> <span class="id" title="var">v_S</span>) <br/>
+&nbsp;&nbsp;(<span class="id" title="var">v</span> : <span class="id" title="var">v_S</span>) : <span class="id" title="var">t_Point</span> <span class="id" title="var">v_F</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_G</span> := <span class="id" title="var">impl__generator</span> <span class="id" title="var">curve</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">impl__mul</span> <span class="id" title="var">curve</span> <span class="id" title="var">v_G</span> <span class="id" title="var">v</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">challenge</span> <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Field</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Scalar</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;(<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> <span class="id" title="var">v_F</span> <span class="id" title="var">v_S</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c</span> : <span class="id" title="var">v_S</span>) : <span class="id" title="var">v_S</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">Clone_f_clone</span> <span class="id" title="var">c</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">respond</span> <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Field</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Scalar</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;(<span class="id" title="var">v</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span> : <span class="id" title="var">v_S</span>) : <span class="id" title="var">v_S</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_sub</span> (<span class="id" title="var">v</span>) (<span class="id" title="var">f_mul</span> (<span class="id" title="var">a</span>) (<span class="id" title="var">c</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">verify</span> <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Field</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Scalar</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;(<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> <span class="id" title="var">v_F</span> <span class="id" title="var">v_S</span>) <br/>
+&nbsp;&nbsp;(<span class="id" title="var">v_V</span> <span class="id" title="var">v_A</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">v_F</span>) (<span class="id" title="var">r</span> <span class="id" title="var">c</span> : <span class="id" title="var">v_S</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_A_is_on_curve</span> := <span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_A</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_A_h</span> := <span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_A</span>) (<span class="id" title="var">impl__h</span> (<span class="id" title="var">curve</span>)) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_G_r</span> := <span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__generator</span> (<span class="id" title="var">curve</span>)) (<span class="id" title="var">r</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_A_c</span> := <span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_A</span>) (<span class="id" title="var">c</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_G_r_plus_A_c</span> := <span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_G_r</span>) (<span class="id" title="var">v_A_c</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> (<span class="id" title="var">v_A_is_on_curve</span>) (<span class="id" title="var">PartialEq_f_ne</span> (<span class="id" title="var">v_A_h</span>) (<span class="id" title="var">Point_Infinity</span>))) (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">v_V</span>) (<span class="id" title="var">v_G_r_plus_A_c</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <span class="id" title="var">Schnorr</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">t_Sized_A</span> : <span class="id" title="var">t_Sized</span> <span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">t_Clone_A</span> : <span class="id" title="var">t_Clone</span> <span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">t_PartialEq_A</span> : <span class="id" title="var">Core_Cmp.t_PartialEq</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">field_A</span> : @<span class="id" title="var">t_Field</span> <span class="id" title="var">A</span> <span class="id" title="var">t_Sized_A</span> <span class="id" title="var">t_PartialEq_A</span> <span class="id" title="var">t_Clone_A</span>}.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">scalar_A</span> : @<span class="id" title="var">t_Scalar</span> <span class="id" title="var">A</span> <span class="id" title="var">t_Sized_A</span> <span class="id" title="var">t_PartialEq_A</span> <span class="id" title="var">t_Clone_A</span> <span class="id" title="var">field_A</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> <span class="id" title="var">F</span> : <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">t_Sized_F</span> : <span class="id" title="var">t_Sized</span> <span class="id" title="var">F</span>}.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">t_Clone_F</span> : <span class="id" title="var">t_Clone</span> <span class="id" title="var">F</span>}.<br/>
+<span class="id" title="keyword">Context</span> {<span class="id" title="var">t_PartialEq_F</span> : <span class="id" title="var">Core_Cmp.t_PartialEq</span> <span class="id" title="var">F</span> <span class="id" title="var">F</span>}.<br/>
+<span class="id" title="keyword">Variable</span> <span class="id" title="var">field_F</span> : @<span class="id" title="var">t_Field</span> <span class="id" title="var">F</span> <span class="id" title="var">t_Sized_F</span> <span class="id" title="var">t_PartialEq_F</span> <span class="id" title="var">t_Clone_F</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> <span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> <span class="id" title="var">F</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Declare Scope</span> <span class="id" title="var">ec_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Notation 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> &quot;'G'" := (<span class="id" title="var">impl__generator</span> <span class="id" title="var">curve</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 0): <span class="id" title="var">ec_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;'h'" := (<span class="id" title="var">impl__h</span> <span class="id" title="var">curve</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 0): <span class="id" title="var">ec_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x + y" := (<span class="id" title="var">impl__add</span> <span class="id" title="var">curve</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>) : <span class="id" title="var">ec_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;x * [ y ]" := (<span class="id" title="var">impl__mul</span> <span class="id" title="var">curve</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>) : <span class="id" title="var">ec_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;- x" := (<span class="id" title="var">impl__neg</span> <span class="id" title="var">curve</span> <span class="id" title="var">x</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 35, <span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>) : <span class="id" title="var">ec_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">ec_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Strengthened Completeness Property: The verifier will
+  accept the proof transcript (V, c, r) if and only if 
+  the prover followed the protocol and
+  computed r correctly
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">schnorr_correctness</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">a</span> <span class="id" title="var">v</span> <span class="id" title="var">c</span> <span class="id" title="var">r</span> : <span class="id" title="var">A</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">a</span> &lt;&gt; <span class="id" title="var">f_zero</span> <span class="id" title="var">tt</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">A</span> := <span class="id" title="var">gen_key</span> <span class="id" title="var">curve</span> <span class="id" title="var">a</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">V</span> := <span class="id" title="var">commitment</span> <span class="id" title="var">curve</span> <span class="id" title="var">v</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">c'</span> := <span class="id" title="var">challenge</span> <span class="id" title="var">curve</span> <span class="id" title="var">c</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">r</span> = <span class="id" title="var">respond</span> <span class="id" title="var">v</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span> &lt;-&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">verify</span> <span class="id" title="var">curve</span> <span class="id" title="var">V</span> <span class="id" title="var">A</span> <span class="id" title="var">r</span> <span class="id" title="var">c'</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+    Helper Lemma for the soundness proof. This lemma states that
+    if the prover can generate two valid responses
+    (r1, c1) and (r2, c2) for the same commitment V and key A,
+    then the prover can compute the secret key a
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">schnorr_soundness</span> <br/>
+&nbsp;&nbsp;(<span class="id" title="var">r1</span> <span class="id" title="var">r2</span> <span class="id" title="var">c1</span> <span class="id" title="var">c2</span> <span class="id" title="var">a</span> <span class="id" title="var">v</span>: <span class="id" title="var">A</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">A</span> := <span class="id" title="var">gen_key</span> <span class="id" title="var">curve</span> <span class="id" title="var">a</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">V</span> := <span class="id" title="var">commitment</span> <span class="id" title="var">curve</span> <span class="id" title="var">v</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">c1</span> &lt;&gt; <span class="id" title="var">c2</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">verify</span> <span class="id" title="var">curve</span> <span class="id" title="var">V</span> <span class="id" title="var">A</span> <span class="id" title="var">r1</span> <span class="id" title="var">c1</span> = <span class="id" title="var">true</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">verify</span> <span class="id" title="var">curve</span> <span class="id" title="var">V</span> <span class="id" title="var">A</span> <span class="id" title="var">r2</span> <span class="id" title="var">c2</span> = <span class="id" title="var">true</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">a</span> = <span class="id" title="var">f_div</span> (<span class="id" title="var">f_sub</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span>) (<span class="id" title="var">f_sub</span> <span class="id" title="var">c2</span> <span class="id" title="var">c1</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Schnorr</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

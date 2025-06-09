@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Schnorr.Schnorr_Theory</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Schnorr.Schnorr_Theory</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+  This file contains the Hax lemmas defined in the Rust code.
+  As these lemmas have already been proven, this file simply 
+  uses the already proven lemmas to prove them.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">ZArith</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">List.ListNotations</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">Z_scope</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">bool_scope</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Ascii</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">String</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Floats.Floats</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">RecordUpdate</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSet</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSetNotations</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Core</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Core</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Schnorr_Point</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Schnorr_Elliptic_curve</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Schnorr_Abstract_structures</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Schnorr_Schnorr</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_add_closed</span> <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} <br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)}<br/>
+&nbsp;&nbsp;`{<span class="id" title="var">t_Field</span> <span class="id" title="var">v_F</span>} `{<span class="id" title="var">t_Scalar</span> <span class="id" title="var">v_S</span>} <br/>
+&nbsp;&nbsp;(<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> <span class="id" title="var">v_F</span> <span class="id" title="var">v_S</span>) <br/>
+&nbsp;&nbsp;(<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">v_F</span>) (<span class="id" title="var">q</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">v_F</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> (<span class="id" title="var">andb</span> (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>)) (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">q</span>))) (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>) (<span class="id" title="var">q</span>))) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_neg_closed</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>)) (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__neg</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>))) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_mul_closed</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) (<span class="id" title="var">x</span> : <span class="id" title="var">v_S</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>)) (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>) (<span class="id" title="var">x</span>))) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_add_inf_r</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>) (<span class="id" title="var">Point_Infinity</span>)) (<span class="id" title="var">p</span>) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_add_neg_r</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>)) (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>) (<span class="id" title="var">impl__neg</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>))) (<span class="id" title="var">Point_Infinity</span>)) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_add_comm</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) (<span class="id" title="var">q</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> (<span class="id" title="var">andb</span> (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>)) (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">q</span>))) (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>) (<span class="id" title="var">q</span>)) (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">q</span>) (<span class="id" title="var">p</span>))) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_add_assoc</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) (<span class="id" title="var">q</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) (<span class="id" title="var">r</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_F</span>))) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> (<span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>)) (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">q</span>))) (<span class="id" title="var">impl__is_on_curve</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">r</span>))) (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>) (<span class="id" title="var">q</span>)) (<span class="id" title="var">r</span>)) (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">p</span>) (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">q</span>) (<span class="id" title="var">r</span>)))) = <span class="id" title="var">true</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_mul_distr</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">x</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">v_S</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__generator</span> (<span class="id" title="var">curve</span>)) (<span class="id" title="var">f_add</span> (<span class="id" title="var">x</span>) (<span class="id" title="var">y</span>))) (<span class="id" title="var">impl__add</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__generator</span> (<span class="id" title="var">curve</span>)) (<span class="id" title="var">x</span>)) (<span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__generator</span> (<span class="id" title="var">curve</span>)) (<span class="id" title="var">y</span>))) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ec_mul_mul</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">x</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">v_S</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__generator</span> (<span class="id" title="var">curve</span>)) (<span class="id" title="var">f_mul</span> (<span class="id" title="var">x</span>) (<span class="id" title="var">y</span>))) (<span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__mul</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">impl__generator</span> (<span class="id" title="var">curve</span>)) (<span class="id" title="var">x</span>)) (<span class="id" title="var">y</span>)) = <span class="id" title="var">true</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">verification_correctness</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">a</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">v</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">c</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">r</span> : <span class="id" title="var">v_S</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_A</span> := <span class="id" title="var">gen_key</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">a</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_V</span> := <span class="id" title="var">commitment</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">c</span> := <span class="id" title="var">challenge</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">c</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PartialEq_f_ne</span> (<span class="id" title="var">a</span>) (<span class="id" title="var">f_zero</span> (<span class="id" title="var">tt</span>))) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">andb</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">implb</span> (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">r</span>) (<span class="id" title="var">respond</span> (<span class="id" title="var">v</span>) (<span class="id" title="var">a</span>) (<span class="id" title="var">c</span>))) (<span class="id" title="var">verify</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_V</span>) (<span class="id" title="var">v_A</span>) (<span class="id" title="var">r</span>) (<span class="id" title="var">c</span>))) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">implb</span> (<span class="id" title="var">verify</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_V</span>) (<span class="id" title="var">v_A</span>) (<span class="id" title="var">r</span>) (<span class="id" title="var">c</span>)) (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">r</span>) (<span class="id" title="var">respond</span> (<span class="id" title="var">v</span>) (<span class="id" title="var">a</span>) (<span class="id" title="var">c</span>))))) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">schnorr_soundness_aux</span> `{<span class="id" title="var">v_F</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">v_S</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_S</span>)} `{<span class="id" title="var">t_Field</span> (<span class="id" title="var">v_F</span>)} `{<span class="id" title="var">t_Scalar</span> (<span class="id" title="var">v_S</span>)} (<span class="id" title="var">curve</span> : <span class="id" title="var">t_EllipticCurve</span> ((<span class="id" title="var">v_F</span>)) ((<span class="id" title="var">v_S</span>))) (<span class="id" title="var">a</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">v</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">r1</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">r2</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">c1</span> : <span class="id" title="var">v_S</span>) (<span class="id" title="var">c2</span> : <span class="id" title="var">v_S</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_A</span> := <span class="id" title="var">gen_key</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">a</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">v_V</span> := <span class="id" title="var">commitment</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">c1</span> := <span class="id" title="var">challenge</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">c1</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">c2</span> := <span class="id" title="var">challenge</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">c2</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">implb</span> (<span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">verify</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_V</span>) (<span class="id" title="var">v_A</span>) (<span class="id" title="var">r1</span>) (<span class="id" title="var">c1</span>)) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">verify</span> (<span class="id" title="var">curve</span>) (<span class="id" title="var">v_V</span>) (<span class="id" title="var">v_A</span>) (<span class="id" title="var">r2</span>) (<span class="id" title="var">c2</span>))) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PartialEq_f_ne</span> (<span class="id" title="var">c1</span>) (<span class="id" title="var">c2</span>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">a</span>) (<span class="id" title="var">f_div</span> (<span class="id" title="var">f_sub</span> (<span class="id" title="var">r1</span>) (<span class="id" title="var">r2</span>)) (<span class="id" title="var">f_sub</span> (<span class="id" title="var">c2</span>) (<span class="id" title="var">c1</span>)))) <br/>
+&nbsp;&nbsp;= <span class="id" title="var">true</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

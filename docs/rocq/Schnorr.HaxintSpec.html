@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Schnorr.HaxintSpec</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Schnorr.HaxintSpec</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+	In this file we prove the equivalence between the hax integer type
+	and Rocq standard Binary Numbers type 'N'.  
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">ZArith</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">List.ListNotations</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">bool_scope</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Ascii</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">String</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Floats.Floats</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">RecordUpdate</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSet</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSetNotations</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Core</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">N_scope</span>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab3"></a><h2 class="section">Definition of usize operations</h2>
+
+
+<div class="paragraph"> </div>
+
+    We define operations for usize, where the specific type class is used
+	to avoid problems with type class resolution. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_add</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">t_usize</span> := <span class="id" title="var">Add_f_add</span> (<span class="id" title="var">t_Add</span> := <span class="id" title="var">t_Add_192585125</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_sub</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">t_usize</span> := <span class="id" title="var">Sub_f_sub</span> (<span class="id" title="var">t_Sub</span> := <span class="id" title="var">t_Sub_1064369889</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_rem</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">t_usize</span> := <span class="id" title="var">Rem_f_rem</span> (<span class="id" title="var">t_Rem</span> := <span class="id" title="var">t_Rem_796467486</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_mul</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">t_usize</span> := <span class="id" title="var">Mul_f_mul</span> (<span class="id" title="var">t_Mul</span> := <span class="id" title="var">t_Mul_490480124</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_ltb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">bool</span> := <span class="id" title="var">PartialOrd_f_lt</span> (<span class="id" title="var">t_PartialOrd</span> := <span class="id" title="var">t_PartialOrd_917114071</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_leb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">bool</span> := <span class="id" title="var">PartialOrd_f_le</span> (<span class="id" title="var">t_PartialOrd</span> := <span class="id" title="var">t_PartialOrd_917114071</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_to_haxint</span> (<span class="id" title="var">x</span> : <span class="id" title="var">t_usize</span>) : <span class="id" title="var">t_HaxInt</span> := (<span class="id" title="var">U64_f_v</span> (<span class="id" title="var">usize_0</span> <span class="id" title="var">x</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">haxint_to_usize</span> (<span class="id" title="var">x</span> : <span class="id" title="var">t_HaxInt</span>) : <span class="id" title="var">t_usize</span> := (<span class="id" title="var">Build_t_usize</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">usize_to_nat</span> (<span class="id" title="var">x</span> : <span class="id" title="var">t_usize</span>) : <span class="id" title="var">nat</span> := <span class="id" title="var">N.to_nat</span> (<span class="id" title="var">U64_f_v</span> (<span class="id" title="var">usize_0</span> <span class="id" title="var">x</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">nat_to_usize</span> (<span class="id" title="var">x</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">t_usize</span> := <span class="id" title="var">Build_t_usize</span> (<span class="id" title="var">N.of_nat</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab4"></a><h2 class="section">Wordsize Helper Lemmas</h2>
+
+
+<div class="paragraph"> </div>
+
+    We prove simple lemmas about the wordsize to simplify 
+	other proofs 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">pos_wordsize</span> := (2^64)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">wordsize_to_pos</span> : <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">v_WORDSIZE_64_</span> = <span class="id" title="var">Npos</span> (<span class="id" title="var">pos_wordsize</span>)%<span class="id" title="var">positive</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">wordsize_to_pos_pred</span> : <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">v_WORDSIZE_64_</span> - 1)%<span class="id" title="var">N</span> = <span class="id" title="var">Npos</span> (<span class="id" title="var">pos_wordsize</span> - 1)%<span class="id" title="var">positive</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_lt_wordsize</span> : 1 &lt; <span class="id" title="var">v_WORDSIZE_64_</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_le_wordsize</span> : 1 &lt;= <span class="id" title="var">v_WORDSIZE_64_</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">word_size_neq_one</span> : <span class="id" title="var">v_WORDSIZE_64_</span> &lt;&gt; 0.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wordsize_sub_1_neq_0</span> : <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">v_WORDSIZE_64_</span> - 1)%<span class="id" title="var">N</span> &lt;&gt; 0.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab5"></a><h2 class="section">Haxint and N equivalence Proofs</h2>
+
+
+<div class="paragraph"> </div>
+
+    Here we prove the equivalence between the haxinteger
+	operations and the binary number Rocq type 'N'. 
+<div class="paragraph"> </div>
+
+ The <span class="inlinecode"><span class="id" title="var">haxint_rem_spec</span></span> proof as been admitted. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">haxint_rem_spec</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">t_HaxInt</span>), <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">haxint_rem</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> = <span class="id" title="var">N.modulo</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">positive_add_spec</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">positive</span>), <br/>
+&nbsp;&nbsp;<span class="id" title="var">positive_add</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> = <span class="id" title="var">Pos.add</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">haxint_add_spec</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">t_HaxInt</span>), <br/>
+&nbsp;&nbsp;<span class="id" title="var">haxint_add</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> = <span class="id" title="var">N.add</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">haxint_mul_spec</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">t_HaxInt</span>), <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">haxint_mul</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> = <span class="id" title="var">N.mul</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" title="var">haxint_sub_spec</span></span> proof has been admitted. The Theorem 
+	is currently invalid because of an error in the Hax extraction 
+	of Rust Core.When the error is fixed, then this Theorem will 
+	be valid.  
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">haxint_sub_spec</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">t_HaxInt</span>), <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">haxint_sub</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> = <span class="id" title="var">N.sub</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+ 
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

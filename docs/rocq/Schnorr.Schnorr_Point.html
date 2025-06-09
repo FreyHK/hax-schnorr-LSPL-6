@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Schnorr.Schnorr_Point</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Schnorr.Schnorr_Point</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">ZArith</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">List.ListNotations</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">Z_scope</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">bool_scope</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Ascii</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">String</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Floats.Floats</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">RecordUpdate</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSet</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">RecordSetNotations</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Core</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Core</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Point definition 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">t_Point</span> (<span class="id" title="var">v_N</span> : <span class="id" title="keyword">Type</span>) `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_N</span>)} : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Point_Infinity</span><br/>
+| <span class="id" title="var">Point_Affine</span> : <span class="id" title="var">v_N</span> -&gt; <span class="id" title="var">v_N</span> -&gt; <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Point_Infinity</span> {<span class="id" title="var">_</span>} {<span class="id" title="var">_</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Point_Affine</span> {<span class="id" title="var">_</span>} {<span class="id" title="var">_</span>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Define type class instances for point  
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">t_PartialEq_527405312</span> `{<span class="id" title="var">v_N</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_N</span>)} `{<span class="id" title="var">t_PartialEq</span> (<span class="id" title="var">v_N</span>) (<span class="id" title="var">v_N</span>)} : <span class="id" title="var">t_PartialEq</span> ((<span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>)))) ((<span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>)))) :=<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> := <span class="id" title="keyword">fun</span>  (<span class="id" title="var">self</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>))) (<span class="id" title="var">other</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>)))=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> (<span class="id" title="var">self</span>,<span class="id" title="var">other</span>) <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| (<span class="id" title="var">Point_Infinity</span>,<span class="id" title="var">Point_Infinity</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">true</span> : <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| (<span class="id" title="var">Point_Affine</span> (<span class="id" title="var">x1</span>) (<span class="id" title="var">y1</span>),<span class="id" title="var">Point_Affine</span> (<span class="id" title="var">x2</span>) (<span class="id" title="var">y2</span>)) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">andb</span> (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">x1</span>) (<span class="id" title="var">x2</span>)) (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">y1</span>) (<span class="id" title="var">y2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">false</span> : <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_ne</span> := <span class="id" title="keyword">fun</span>  (<span class="id" title="var">self</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>))) (<span class="id" title="var">other</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>)))=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="keyword">match</span> (<span class="id" title="var">self</span>,<span class="id" title="var">other</span>) <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| (<span class="id" title="var">Point_Infinity</span>,<span class="id" title="var">Point_Infinity</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">true</span> : <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| (<span class="id" title="var">Point_Affine</span> (<span class="id" title="var">x1</span>) (<span class="id" title="var">y1</span>),<span class="id" title="var">Point_Affine</span> (<span class="id" title="var">x2</span>) (<span class="id" title="var">y2</span>)) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">andb</span> (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">x1</span>) (<span class="id" title="var">x2</span>)) (<span class="id" title="var">PartialEq_f_eq</span> (<span class="id" title="var">y1</span>) (<span class="id" title="var">y2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">false</span> : <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>);<br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">t_Clone_604343718</span> `{<span class="id" title="var">v_N</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> (<span class="id" title="var">v_N</span>)} `{<span class="id" title="var">t_Clone</span> (<span class="id" title="var">v_N</span>)} : <span class="id" title="var">t_Clone</span> ((<span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>)))) :=<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Clone_f_clone</span> := <span class="id" title="keyword">fun</span>  (<span class="id" title="var">self</span> : <span class="id" title="var">t_Point</span> ((<span class="id" title="var">v_N</span>)))=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">self</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Point_Infinity</span> =&gt;  <span class="id" title="var">Point_Infinity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Point_Affine</span> (<span class="id" title="var">x</span>) (<span class="id" title="var">y</span>) =&gt; <span class="id" title="var">Point_Affine</span> (<span class="id" title="var">Clone_f_clone</span> (<span class="id" title="var">x</span>)) (<span class="id" title="var">Clone_f_clone</span> (<span class="id" title="var">y</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Proof of point equality properties  
+</div>
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">Schnorr</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">Schnorr_Abstract_structures</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_eq_compat_l'</span> { <span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="tactic">field</span> : <span class="id" title="var">t_Field</span> <span class="id" title="var">T</span>}: <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">T</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">x</span> = <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> + <span class="id" title="var">z</span> = <span class="id" title="var">y</span> + <span class="id" title="var">z</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">p_eq_refl</span> {<span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="tactic">field</span> : <span class="id" title="var">t_Field</span> <span class="id" title="var">T</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">T</span>) : <br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> <span class="id" title="var">p</span> <span class="id" title="var">p</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">p_eq_iff_partial_eq</span> {<span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">T</span>} `{<span class="id" title="var">t_Field</span> <span class="id" title="var">T</span>} (<span class="id" title="var">p1</span> <span class="id" title="var">p2</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">T</span>) : <br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> <span class="id" title="var">p1</span> <span class="id" title="var">p2</span> = <span class="id" title="var">true</span> &lt;-&gt; <span class="id" title="var">p1</span> = <span class="id" title="var">p2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">p_neq_iff_not_partial_eq</span> {<span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">T</span>} `{<span class="id" title="var">t_Field</span> <span class="id" title="var">T</span>} (<span class="id" title="var">p1</span> <span class="id" title="var">p2</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">T</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_eq</span> <span class="id" title="var">p1</span> <span class="id" title="var">p2</span> = <span class="id" title="var">false</span> &lt;-&gt; <span class="id" title="var">p1</span> &lt;&gt; <span class="id" title="var">p2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">p_ne_eq_relation</span> {<span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">T</span>} `{<span class="id" title="var">t_Field</span> <span class="id" title="var">T</span>} (<span class="id" title="var">p1</span> <span class="id" title="var">p2</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">T</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_ne</span> <span class="id" title="var">p1</span> <span class="id" title="var">p2</span> = <span class="id" title="var">negb</span> (<span class="id" title="var">PartialEq_f_eq</span> <span class="id" title="var">p1</span> <span class="id" title="var">p2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">p_eq_iff_not_partial_ne</span> {<span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">T</span>} `{<span class="id" title="var">t_Field</span> <span class="id" title="var">T</span>} (<span class="id" title="var">p1</span> <span class="id" title="var">p2</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">T</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_ne</span> <span class="id" title="var">p1</span> <span class="id" title="var">p2</span> = <span class="id" title="var">false</span> &lt;-&gt; <span class="id" title="var">p1</span> = <span class="id" title="var">p2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">p_neq_iff_partial_ne</span> {<span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} `{<span class="id" title="var">t_Sized</span> <span class="id" title="var">T</span>} `{<span class="id" title="var">t_Field</span> <span class="id" title="var">T</span>} (<span class="id" title="var">p1</span> <span class="id" title="var">p2</span> : <span class="id" title="var">t_Point</span> <span class="id" title="var">T</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialEq_f_ne</span> <span class="id" title="var">p1</span> <span class="id" title="var">p2</span> = <span class="id" title="var">true</span> &lt;-&gt; <span class="id" title="var">p1</span> &lt;&gt; <span class="id" title="var">p2</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
