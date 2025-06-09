@@ -1,0 +1,13 @@
+-R ./ Schnorr
+-arg -w
+-arg all
+
+Schnorr_Theory.v
+Schnorr_Schnorr.v
+Schnorr_Point.v
+Schnorr_Elliptic_curve.v
+Schnorr_Abstract_structures.v
+Schnorr.v
+Binary_Nums.v
+HaxintSpec.v
+FoldRange.v
